@@ -57,11 +57,9 @@ namespace AHAH.Example.MVC4.Filters
                 filtercontext.HttpContext.Request != null && 
                 filtercontext.HttpContext.Request.QueryString != null)
             {
-                var trigger = filtercontext.HttpContext.Request.QueryString[AhahTrigger];
+                var trigger = filtercontext.HttpContext.Request.Headers[AhahTrigger];
 
-                if (!String.IsNullOrWhiteSpace(trigger) &&
-                    String.Equals(trigger, Boolean.TrueString,
-                    StringComparison.InvariantCultureIgnoreCase))
+                if (!String.IsNullOrWhiteSpace(trigger))
                 {
                     var viewresult = filtercontext.Result as ViewResult;
                     if (viewresult != null)

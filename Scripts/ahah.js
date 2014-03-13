@@ -1,26 +1,31 @@
 ﻿(function () {
-
-    var _activeLinks = [];/*Used to track links that have already been processed*/
-    var _ahahLinkClass = 'ahah';/*Default link class to apply AHAH workflow*/
-    var _ahahContainerDataAttrib = 'data-container';/*Optional container attribute to determine where link href's content is injected to*/
-    var _ahahDefaultContainer = 'content';/*Default Id for injected content*/
+    /*Used to track links that have already been processed*/
+    var _activeLinks = [];
+    /*Default link class to apply AHAH workflow*/
+    var _ahahLinkClass = 'ahah';
+    /*Optional container attribute to determine where link href's content is injected to*/
+    var _ahahContainerDataAttrib = 'data-container';
+    /*Default Id for injected content*/
+    var _ahahDefaultContainer = 'content';
 
     function supportsHistoryAPI() {
         return !!(window.history && history.pushState);
     }
 
     function updateContent(state) {
-        /*Not worrying about ActiveX XMLHttpRequest since all IE browsers that support history API (IE>8) support the standard 'XMLHttpRequest'*/
+        /*Not worrying about ActiveX XMLHttpRequest since all IE browsers 
+        that support history API (IE>8) support the standard 'XMLHttpRequest'*/
         var req = new XMLHttpRequest();
 
-        req.open('GET', state.href + '/?frag=true',
-                 false);
+        req.open('GET', state.href, false);
+        req.setRequestHeader("AHAH", "true");
         req.send(null);
         if (req.status == 200) {
             var container = document.getElementById(state.container);
             if (container) {
                 container.innerHTML = req.responseText;
-                initAhahLinks();/*Check new content for links that may support the AHAH workflow*/
+                /*Check new content for links that may support the AHAH workflow*/
+                initAhahLinks();
                 return true;
             }
         }
@@ -28,7 +33,8 @@
     }
 
     function addLinkClickHandler(link) {
-        /*Not worrying older IE event hooking calls since all IE browsers that support history API (IE>8) support the standard 'addEventListener'*/
+        /*Not worrying older IE event hooking calls since all IE browsers
+        that support history API (IE>8) support the standard 'addEventListener'*/
         link.addEventListener("click", function (e) {
             var state = {
                 href: link.href,
@@ -50,7 +56,8 @@
         if (links) {
 
             for (var i = 0; i < links.length; i++) {
-                /*If we have not already processed this link, then add a click handler and track it to prevent subsequent processing*/
+                /*If we have not already processed this link,
+                then add a click handler and track it to prevent subsequent processing*/
                 if (_activeLinks.indexOf(links[i]) < 0) {
                    
                     addLinkClickHandler(links[i]);
